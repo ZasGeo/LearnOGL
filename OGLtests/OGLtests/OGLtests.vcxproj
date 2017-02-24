@@ -165,6 +165,8 @@
     <None Include="BasicFragmentShader.frs" />
     <None Include="BasicVertexShader.vs" />
     <None Include="fragmentshader.frs" />
+    <None Include="screenFragmentShader.frs" />
+    <None Include="screenVertexShader.vs" />
     <None Include="shader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

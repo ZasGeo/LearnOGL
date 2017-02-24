@@ -92,11 +92,13 @@
 //	glViewport(0, 0, width, height);
 //
 //
-//	Shader ComonTextureShader("shader.vs", "fragmentshader.frs");
+//	Shader LightningShader("lightningObjVertexShader.vs", "lightningObjFragmentShader.frs");
 //
-//	Shader BaseColor("BasicVertexShader.vs", "BasicFragmentShader.frs");
+//	Shader LightningSourceShader("ligthningSourceVertexShader.vs", "lightningSourceFragmentShader.frs");
 //
 //	Model nanosuit("SuitModel/nanosuit/nanosuit.obj");
+//
+//	
 //
 //
 //	glEnable(GL_DEPTH_TEST);
@@ -122,21 +124,21 @@
 //
 //		
 //
-//		BaseColor.Use();
+//		LightningShader.Use();
 //
 //		glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)WINDOW_WIDTH_Z / (GLfloat)WINDOW_HEIGHT_Z, 0.1f, 1000.0f);
 //		glm::mat4 view = camera.GetViewMatrix();
-//		glUniformMatrix4fv(glGetUniformLocation(ComonTextureShader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-//		glUniformMatrix4fv(glGetUniformLocation(ComonTextureShader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
+//		glUniformMatrix4fv(glGetUniformLocation(LightningShader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+//		glUniformMatrix4fv(glGetUniformLocation(LightningShader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
 //
 //
 //		// Draw the loaded model
 //		glm::mat4 model;
 //		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // Translate it down a bit so it's at the center of the scene
 //		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// It's a bit too big for our scene, so scale it down
-//		glUniformMatrix4fv(glGetUniformLocation(ComonTextureShader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+//		glUniformMatrix4fv(glGetUniformLocation(LightningShader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
 //
-//		nanosuit.Draw(BaseColor);
+//		nanosuit.Draw(LightningShader);
 //
 //		glfwSwapBuffers(window);
 //	}

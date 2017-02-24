@@ -61,5 +61,11 @@
     <None Include="shader.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="screenVertexShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="screenFragmentShader.frs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
