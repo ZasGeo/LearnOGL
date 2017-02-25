@@ -386,7 +386,7 @@ int main()
 		// Draw objects
 		screenShader.Use();
 		
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
+		//glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDisable(GL_DEPTH_TEST);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
