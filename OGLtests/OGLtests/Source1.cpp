@@ -78,6 +78,8 @@ int main()
 	Shader BasicShader("BasicVertexShader.vs", "BasicFragmentShader.frs");
 
 	Shader screenShader("screenVertexShader.vs", "screenFragmentShader.frs");
+
+	Shader PostProcessShader("screenVertexShader.vs", "PostprocessFragmentShader.frs");
 	
 
 #pragma region "object_initialization"
@@ -165,6 +167,32 @@ int main()
 		1.0f, -1.0f,  1.0f, 0.0f,
 		1.0f,  1.0f,  1.0f, 1.0f
 	};
+
+	GLfloat quadMirror[] = {   // Vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+								 // Positions   // TexCoords
+								 // Positions   // TexCoords
+		-0.3f,  1.0f,  0.0f, 1.0f,
+		-0.3f,  0.7f,  0.0f, 0.0f,
+		0.3f,  0.7f,  1.0f, 0.0f,
+
+		-0.3f,  1.0f,  0.0f, 1.0f,
+		0.3f,  0.7f,  1.0f, 0.0f,
+		0.3f,  1.0f,  1.0f, 1.0f
+	};
+
+
+
+	GLuint mirrVAO, mirrVBO;
+	glGenVertexArrays(1, &mirrVAO);
+	glGenBuffers(1, &mirrVBO);
+	glBindVertexArray(mirrVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, mirrVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadMirror), &quadMirror, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+	glBindVertexArray(0);
 
 	GLuint quadVAO, quadVBO;
 	glGenVertexArrays(1, &quadVAO);
@@ -282,6 +310,41 @@ int main()
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	GLuint framebufferFin;
+	glGenFramebuffers(1, &framebufferFin);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebufferFin);
+
+
+	GLuint texColorBufferFin;
+	glGenTextures(1, &texColorBufferFin);
+	glBindTexture(GL_TEXTURE_2D, texColorBufferFin);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Attach it to currently bound framebuffer object
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBufferFin, 0);
+
+
+
+	GLuint rboFin;
+	glGenRenderbuffers(1, &rboFin);
+	glBindRenderbuffer(GL_RENDERBUFFER, rboFin);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+
+
+	// Attach it to currently bound framebuffer object
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -302,7 +365,7 @@ int main()
 		// Draw objects
 		shader.Use();
 		glm::mat4 model;
-		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 view = camera.GetReverseViewMatrix();
 		glm::mat4 projection = glm::perspective(camera.Zoom, (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -354,7 +417,7 @@ int main()
 
 		}
 		glBindVertexArray(0);
-		//glEnable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
 
 		
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
@@ -381,10 +444,110 @@ int main()
 		glEnable(GL_DEPTH_TEST);
 
 
+
+
+
+		glBindFramebuffer(GL_FRAMEBUFFER, framebufferFin);
+		// Clear the colorbuffer
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		// Draw objects
+		shader.Use();
+		
+		view = camera.GetViewMatrix();
+		projection = glm::perspective(camera.Zoom, (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+		glStencilMask(0x00);
+		// Floor
+		glBindVertexArray(planeVAO);
+		glBindTexture(GL_TEXTURE_2D, floorTexture);
+		model = glm::mat4();
+		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+
+
+
+
+
+
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+		// Cubes
+		glBindVertexArray(cubeVAO);
+		glBindTexture(GL_TEXTURE_2D, cubeTexture);  // We omit the glActiveTexture part since TEXTURE0 is already the default active texture unit. (sampler used in fragment is set to 0 as well as default)		
+		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		glDisable(GL_CULL_FACE);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0x00);
+		glBindVertexArray(transparentVAO);
+		glBindTexture(GL_TEXTURE_2D, windowTexture);
+		std::sort(vegetation.begin(), vegetation.end(), [](const glm::vec3& first, const glm::vec3& sec) {
+			return length(camera.Position - first) >= length(camera.Position - sec);
+		});
+		for (GLuint i = 0; i < vegetation.size(); ++i)
+		{
+			model = glm::mat4();
+			model = glm::translate(model, vegetation[i]);
+			glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		}
+		glBindVertexArray(0);
+
+
+		glEnable(GL_CULL_FACE);
+
+
+		//mirror
+		screenShader.Use();
+
+		glBindVertexArray(mirrVAO);
+		glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+		BasicShader.Use();
+		glUniformMatrix4fv(glGetUniformLocation(BasicShader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(BasicShader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		// Cubes
+		glBindVertexArray(cubeVAO);
+		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+		model = glm::scale(model, glm::vec3(scale, scale, scale));
+		glUniformMatrix4fv(glGetUniformLocation(BasicShader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(scale, scale, scale));
+		glUniformMatrix4fv(glGetUniformLocation(BasicShader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
+
+
+
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		// Draw objects
-		screenShader.Use();
+		PostProcessShader.Use();
 		
 		//glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -393,7 +556,7 @@ int main()
 		glStencilMask(0x00);
 		// Floor
 		glBindVertexArray(quadVAO);
-		glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+		glBindTexture(GL_TEXTURE_2D, texColorBufferFin);
 		/*model = glm::mat4();
 		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));*/
 		glDrawArrays(GL_TRIANGLES, 0, 6);

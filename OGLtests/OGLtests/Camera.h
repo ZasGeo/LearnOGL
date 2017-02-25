@@ -43,9 +43,14 @@ public:
 	Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch);
 
 	inline glm::mat4 GetViewMatrix() const {
-		return glm::lookAt(this->Position, this->Position + this->Front, this->Up);
+		return glm::lookAt(Position,Position + Front, this->Up);
 	}
-		
+	
+
+	inline glm::mat4 GetReverseViewMatrix() const {
+		return glm::lookAt(Position, Position +(- Front), this->Up);
+	}
+
 	void ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime);
 	
 	
