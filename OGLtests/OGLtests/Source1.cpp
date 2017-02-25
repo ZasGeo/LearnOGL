@@ -410,7 +410,7 @@ int main()
 	glDeleteBuffers(1, &transparentVBO);
 	glDeleteBuffers(1, &planeVBO);
 	glDeleteBuffers(1, &cubeVBO);
-
+	
 
 	glfwTerminate();
 	return 0;
