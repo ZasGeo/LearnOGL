@@ -70,5 +70,11 @@
     <None Include="PostprocessFragmentShader.frs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="skyBoxVertexShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="skyboxFragmentShader.frs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
