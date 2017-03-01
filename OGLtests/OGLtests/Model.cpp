@@ -97,6 +97,9 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene) {
 		// 2. Specular maps
 		std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+		// 3. Reflection
+		std::vector<Texture> reflectionMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_reflection");
+		textures.insert(textures.end(), reflectionMaps.begin(), reflectionMaps.end());
 	}
 
 	// Return a mesh object created from the extracted mesh data

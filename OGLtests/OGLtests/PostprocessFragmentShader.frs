@@ -21,11 +21,11 @@ void main()
         vec2(offset,  -offset)  // bottom-right    
     );
 
-    float kernel[9] = float[](
+    float kernel[9] = {
         -1, -1, -1,
         -1,  9, -1,
         -1, -1, -1
-    );
+    };
     
     vec3 sampleTex[9];
     for(int i = 0; i < 9; i++)
@@ -36,5 +36,5 @@ void main()
     for(int i = 0; i < 9; i++)
         col += sampleTex[i] * kernel[i];
     
-    color = vec4(col, 1.0);
+    color =texture(screenTexture, TexCoords);
 } 

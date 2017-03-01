@@ -10,6 +10,7 @@ void Mesh::Draw(const Shader & shader) const {
 
 	GLuint diffuseNr = 1;
 	GLuint specularNr = 1;
+	GLuint reflectionNr = 1;
 	for (GLuint i = 0; i < this->textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i); // Activate proper texture unit before binding
@@ -23,8 +24,11 @@ void Mesh::Draw(const Shader & shader) const {
 		else if (name == "texture_specular") {
 			number=std::to_string(specularNr++);
 		}
+		else if (name == "texture_reflection") {
+			number = std::to_string(reflectionNr++);
+		}
 
-		glUniform1f(glGetUniformLocation(shader.progId, ("material." + name + number).c_str()), i);
+		glUniform1f(glGetUniformLocation(shader.progId, (name + number).c_str()), i);
 		glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
 	}
 	glActiveTexture(GL_TEXTURE0);
