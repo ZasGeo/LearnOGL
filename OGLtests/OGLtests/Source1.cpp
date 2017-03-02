@@ -230,6 +230,7 @@ int main()
 		1.0f, -1.0f,  1.0f
 	};
 
+	
 	GLuint skyboxVAO, skyboxVBO;
 	glGenVertexArrays(1, &skyboxVAO);
 	glGenBuffers(1, &skyboxVBO);
@@ -238,6 +239,7 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	GLuint mirrVAO, mirrVBO;
@@ -415,6 +417,26 @@ int main()
 	Model nanosuit("SuitModel/nanosuit/nanosuit.obj");
 	Model nanosuitRef("SuitModel/nanosuit_reflection/nanosuit.obj");
 	
+	GLuint mat_index = glGetUniformBlockIndex(shader.progId, "Matrices");
+	glUniformBlockBinding(shader.progId, mat_index, 0);
+	
+	
+
+
+	GLuint uboMatrices;
+	glGenBuffers(1, &uboMatrices);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
+
+	
+	
+
+
+
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	// Game loop
@@ -429,7 +451,12 @@ int main()
 		glfwPollEvents();
 		Do_Movement();
 
-
+		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 projection = glm::perspective(camera.Zoom, (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+		glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(view));
+		glBufferSubData(GL_UNIFORM_BUFFER,sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 
 		//scene
@@ -440,23 +467,9 @@ int main()
 		
 
 		// Draw objects
-		shader.Use();
 		
-		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 projection = glm::perspective(camera.Zoom, (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
-		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		shader.Use();
 		glUniform3f(glGetUniformLocation(shader.progId, "cameraPos"), camera.Position.x, camera.Position.y, camera.Position.z);
-
-		//// Floor
-		//glBindVertexArray(planeVAO);
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, floorTexture);
-		//glm::mat4 model = glm::mat4();
-		//glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
-		//glBindVertexArray(0);
-
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glUniform1i(glGetUniformLocation(shader.progId, "skybox"), 3);
@@ -465,39 +478,10 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		nanosuitRef.Draw(shader);
 
-		// Cubes
-		//glBindVertexArray(cubeVAO);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);  // We omit the glActiveTexture part since TEXTURE0 is already the default active texture unit. (sampler used in fragment is set to 0 as well as default)		
-		//glm::mat4 model = glm::mat4();
-		//model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-		//glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glBindVertexArray(0);
-
-		/*glDisable(GL_CULL_FACE);
-		glBindVertexArray(transparentVAO);
-		glBindTexture(GL_TEXTURE_2D, windowTexture);
-		std::sort(vegetation.begin(), vegetation.end(), [](const glm::vec3& first, const glm::vec3& sec) {
-			return length(camera.Position - first) >= length(camera.Position - sec);
-		});
-		for (GLuint i = 0; i < vegetation.size(); ++i)
-		{
-			model = glm::mat4();
-			model = glm::translate(model, vegetation[i]);
-			glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
-
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		}
-		glBindVertexArray(0);
-		glEnable(GL_CULL_FACE);*/
-
-
 
 		glDepthFunc(GL_LEQUAL);
 		SkyBoxShader.Use();
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));	// Remove any translation component of the view matrix
-		projection = glm::perspective(camera.Zoom, (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 		glUniformMatrix4fv(glGetUniformLocation(SkyBoxShader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(SkyBoxShader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 		// skybox cube
