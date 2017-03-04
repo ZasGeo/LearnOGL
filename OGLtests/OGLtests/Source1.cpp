@@ -76,7 +76,8 @@ int main()
 	
 
 							// Setup and compile our shaders
-	Shader shader("shader.vs", "fragmentshader.frs");
+	Shader shader("shader.vs", "fragmentshader.frs","geometryshader.gs");
+
 	Shader BasicShader("BasicVertexShader.vs", "BasicFragmentShader.frs");
 
 	Shader screenShader("screenVertexShader.vs", "screenFragmentShader.frs");
@@ -84,81 +85,16 @@ int main()
 	Shader PostProcessShader("screenVertexShader.vs", "PostprocessFragmentShader.frs");
 
 	Shader SkyBoxShader("skyBoxVertexShader.vs", "skyboxFragmentShader.frs");
+
+	Shader GeometryTestShader("GeometryTestVs.vs", "GeometryTetsFs.frs", "GeometryTestGs.gs");
 	
 
 #pragma region "object_initialization"
 	// Set the object data (buffers, vertex attributes)
-	GLfloat cubeVertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-	};
-	GLfloat planeVertices[] = {
-		// Positions            // Texture Coords (note we set these higher than 1 that together with GL_REPEAT as texture wrapping mode will cause the floor texture to repeat)
-		5.0f,  -0.5f,  5.0f,  1.0f, 0.0f,
-		
-		-5.0f, -0.5f, -5.0f,  0.0f, 1.0f,
-		-5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
+	
+	
 
 
-		-5.0f, -0.5f, -5.0f,  0.0f, 1.0f,
-		5.0f,  -0.5f,  5.0f,  1.0f, 0.0f,
-		5.0f,  -0.5f, -5.0f,  1.0f, 1.0f,
-		
-		
-		
-		
-	};
-
-
-	GLfloat transparentVertices[] = {
-		// Positions         // Texture Coords (swapped y coordinates because texture is flipped upside down)
-		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
-		0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
-		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
-
-		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
-		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
-		1.0f,  0.5f,  0.0f,  1.0f,  0.0f
-	};
 
 
 	GLfloat quadVertices[] = {   // Vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
@@ -172,17 +108,7 @@ int main()
 		1.0f,  1.0f,  1.0f, 1.0f
 	};
 
-	GLfloat quadMirror[] = {   // Vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-								 // Positions   // TexCoords
-								 // Positions   // TexCoords
-		-0.3f,  1.0f,  0.0f, 1.0f,
-		-0.3f,  0.7f,  0.0f, 0.0f,
-		0.3f,  0.7f,  1.0f, 0.0f,
-
-		-0.3f,  1.0f,  0.0f, 1.0f,
-		0.3f,  0.7f,  1.0f, 0.0f,
-		0.3f,  1.0f,  1.0f, 1.0f
-	};
+	
 
 
 	GLfloat skyboxVertices[] = {
@@ -231,6 +157,25 @@ int main()
 	};
 
 	
+
+	GLfloat points[] = {
+		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
+		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
+		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
+		-0.5f, -0.5f, 1.0f, 1.0f, 0.0f  // Bottom-left
+	};
+	GLuint pointsVBO, pointsVAO;
+	glGenBuffers(1, &pointsVBO);
+	glGenVertexArrays(1, &pointsVAO);
+	glBindVertexArray(pointsVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, pointsVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+	glBindVertexArray(0);
+	
 	GLuint skyboxVAO, skyboxVBO;
 	glGenVertexArrays(1, &skyboxVAO);
 	glGenBuffers(1, &skyboxVBO);
@@ -242,17 +187,7 @@ int main()
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	GLuint mirrVAO, mirrVBO;
-	glGenVertexArrays(1, &mirrVAO);
-	glGenBuffers(1, &mirrVBO);
-	glBindVertexArray(mirrVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, mirrVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadMirror), &quadMirror, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
-	glBindVertexArray(0);
+	
 
 	GLuint quadVAO, quadVBO;
 	glGenVertexArrays(1, &quadVAO);
@@ -266,50 +201,14 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
 	glBindVertexArray(0);
 
-	// Setup cube VAO
-	GLuint cubeVAO, cubeVBO;
-	glGenVertexArrays(1, &cubeVAO);
-	glGenBuffers(1, &cubeVBO);
-	glBindVertexArray(cubeVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glBindVertexArray(0);
-	// Setup plane VAO
-	GLuint planeVAO, planeVBO;
-	glGenVertexArrays(1, &planeVAO);
-	glGenBuffers(1, &planeVBO);
-	glBindVertexArray(planeVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glBindVertexArray(0);
-
-
-	GLuint transparentVAO, transparentVBO;
-	glGenVertexArrays(1, &transparentVAO);
-	glGenBuffers(1, &transparentVBO);
-	glBindVertexArray(transparentVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glBindVertexArray(0);
+	
 	
 
-	// Load textures
-	GLuint cubeTexture = loadTexture("container.jpg");
-	GLuint floorTexture = loadTexture("container2.png");
-	GLuint grassTexture = loadTexture("grass.png",GL_CLAMP_TO_EDGE);
-	GLuint windowTexture = loadTexture("blending_transparent_window.png", GL_CLAMP_TO_EDGE);
+
+	
+	
+
+	
 	
 
 	// Setup some OpenGL options
@@ -319,8 +218,8 @@ int main()
 	/*glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);*/
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
@@ -414,7 +313,7 @@ int main()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	Model nanosuit("SuitModel/nanosuit/nanosuit.obj");
+	//Model nanosuit("SuitModel/nanosuit/nanosuit.obj");
 	Model nanosuitRef("SuitModel/nanosuit_reflection/nanosuit.obj");
 	
 	GLuint mat_index = glGetUniformBlockIndex(shader.progId, "Matrices");
@@ -455,7 +354,10 @@ int main()
 		glm::mat4 projection = glm::perspective(camera.Zoom, (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 		glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(view));
-		glBufferSubData(GL_UNIFORM_BUFFER,sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
+		
+		
+		
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 
@@ -469,6 +371,7 @@ int main()
 		// Draw objects
 		
 		shader.Use();
+		glUniform1f(glGetUniformLocation(shader.progId, "time"), glfwGetTime());
 		glUniform3f(glGetUniformLocation(shader.progId, "cameraPos"), camera.Position.x, camera.Position.y, camera.Position.z);
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
@@ -495,30 +398,29 @@ int main()
 		
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		
-		PostProcessShader.Use();
-		
-		//glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDisable(GL_DEPTH_TEST);
+
+		PostProcessShader.Use();
 		glBindVertexArray(quadVAO);
 		glBindTexture(GL_TEXTURE_2D, texColorBufferFin);
-		/*model = glm::mat4();
-		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));*/
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
+
+		/*GeometryTestShader.Use();
+		glBindVertexArray(pointsVAO);
+		glDrawArrays(GL_POINTS, 0, 4);
+		glBindVertexArray(0);*/
+
 		glEnable(GL_DEPTH_TEST);
 		
 		// Swap the buffers
 		glfwSwapBuffers(window);
 	}
 
-	glDeleteVertexArrays(1, &transparentVAO);
-	glDeleteVertexArrays(1, &planeVAO);
-	glDeleteVertexArrays(1, &cubeVAO);
-	glDeleteBuffers(1, &transparentVBO);
-	glDeleteBuffers(1, &planeVBO);
-	glDeleteBuffers(1, &cubeVBO);
+	
 	
 
 	glfwTerminate();

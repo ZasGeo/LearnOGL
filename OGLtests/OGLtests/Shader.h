@@ -23,7 +23,9 @@ public:
 
 	GLuint progId;
 
-	Shader(const GLchar* vertexshaderpath, const GLchar* fragmentshaderpath);
+	Shader(const std::string& vertexshaderpath, const std::string& fragmentshaderpath, const std::string& geometryshaderpath);
+
+	Shader(const std::string& vertexshaderpath, const std::string& fragmentshaderpath);
 
 	void Use();
 	

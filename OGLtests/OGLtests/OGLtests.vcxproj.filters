@@ -76,5 +76,17 @@
     <None Include="skyboxFragmentShader.frs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="GeometryTestVs.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="GeometryTestGs.gs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="GeometryTetsFs.frs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="geometryshader.gs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
