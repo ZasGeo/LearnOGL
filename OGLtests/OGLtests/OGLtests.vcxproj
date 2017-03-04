@@ -165,10 +165,10 @@
     <None Include="BasicFragmentShader.frs" />
     <None Include="BasicVertexShader.vs" />
     <None Include="fragmentshader.frs" />
-    <None Include="geometryshader.gs" />
-    <None Include="GeometryTestGs.gs" />
-    <None Include="GeometryTestVs.vs" />
-    <None Include="GeometryTetsFs.frs" />
+    <None Include="normalViualizeGS.gs" />
+    <None Include="geometryShader.gs" />
+    <None Include="normalVisualizeVS.vs" />
+    <None Include="normalVisualizeFS.frs" />
     <None Include="PostprocessFragmentShader.frs" />
     <None Include="screenFragmentShader.frs" />
     <None Include="screenVertexShader.vs" />

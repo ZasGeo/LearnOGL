@@ -76,7 +76,7 @@ int main()
 	
 
 							// Setup and compile our shaders
-	Shader shader("shader.vs", "fragmentshader.frs","geometryshader.gs");
+	Shader shader("shader.vs", "fragmentshader.frs","geometryShader.gs");
 
 	Shader BasicShader("BasicVertexShader.vs", "BasicFragmentShader.frs");
 
@@ -86,7 +86,7 @@ int main()
 
 	Shader SkyBoxShader("skyBoxVertexShader.vs", "skyboxFragmentShader.frs");
 
-	Shader GeometryTestShader("GeometryTestVs.vs", "GeometryTetsFs.frs", "GeometryTestGs.gs");
+	Shader normalVisualizeShader("normalVisualizeVS.vs", "normalVisualizeFS.frs", "normalViualizeGS.gs");
 	
 
 #pragma region "object_initialization"
@@ -158,23 +158,8 @@ int main()
 
 	
 
-	GLfloat points[] = {
-		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
-		0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
-		0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
-		-0.5f, -0.5f, 1.0f, 1.0f, 0.0f  // Bottom-left
-	};
-	GLuint pointsVBO, pointsVAO;
-	glGenBuffers(1, &pointsVBO);
-	glGenVertexArrays(1, &pointsVAO);
-	glBindVertexArray(pointsVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, pointsVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
-	glBindVertexArray(0);
+	
+	
 	
 	GLuint skyboxVAO, skyboxVBO;
 	glGenVertexArrays(1, &skyboxVAO);
@@ -318,6 +303,7 @@ int main()
 	
 	GLuint mat_index = glGetUniformBlockIndex(shader.progId, "Matrices");
 	glUniformBlockBinding(shader.progId, mat_index, 0);
+	glUniformBlockBinding(normalVisualizeShader.progId, mat_index, 0);
 	
 	
 
@@ -380,7 +366,9 @@ int main()
 		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
 		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		nanosuitRef.Draw(shader);
-
+		normalVisualizeShader.Use();
+		glUniformMatrix4fv(glGetUniformLocation(normalVisualizeShader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		nanosuitRef.Draw(shader);
 
 		glDepthFunc(GL_LEQUAL);
 		SkyBoxShader.Use();
@@ -409,10 +397,6 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
-		/*GeometryTestShader.Use();
-		glBindVertexArray(pointsVAO);
-		glDrawArrays(GL_POINTS, 0, 4);
-		glBindVertexArray(0);*/
 
 		glEnable(GL_DEPTH_TEST);
 		

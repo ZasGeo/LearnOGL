@@ -76,16 +76,16 @@
     <None Include="skyboxFragmentShader.frs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="GeometryTestVs.vs">
+    <None Include="normalVisualizeVS.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="GeometryTestGs.gs">
+    <None Include="normalVisualizeFS.frs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="GeometryTetsFs.frs">
+    <None Include="normalViualizeGS.gs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="geometryshader.gs">
+    <None Include="geometryShader.gs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
