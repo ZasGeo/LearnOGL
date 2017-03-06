@@ -21,7 +21,7 @@ public:
 			this->meshes[i].Draw(shader);
 	}
 
-private:
+//private:
 
 	std::vector<Mesh> meshes;
 	std::string directory;

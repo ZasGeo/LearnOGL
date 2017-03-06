@@ -88,5 +88,11 @@
     <None Include="geometryShader.gs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="instancedVertexShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="instancedFragmentShader.frs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

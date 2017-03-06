@@ -41,7 +41,7 @@ public:
 
 	void Draw(const Shader& shader) const;
 
-private:
+//private:
 
 	GLuint VAO, VBO, EBO;
 
