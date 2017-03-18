@@ -44,54 +44,33 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BasicFragmentShader.frs">
+    <None Include="shadow_mapping.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="BasicVertexShader.vs">
+    <None Include="shadow_mapping.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="fragmentshader.frs">
+    <None Include="shadow_mapping_depth.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="shader.vs">
+    <None Include="shadow_mapping_depth.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="screenVertexShader.vs">
+    <None Include="pointshadow_depth.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="screenFragmentShader.frs">
+    <None Include="pointshadow_depth.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="PostprocessFragmentShader.frs">
+    <None Include="pointshadow_depth.gs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="skyBoxVertexShader.vs">
+    <None Include="shdpointtest.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="skyboxFragmentShader.frs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="normalVisualizeVS.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="normalVisualizeFS.frs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="normalViualizeGS.gs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="geometryShader.gs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="instancedVertexShader.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="instancedFragmentShader.frs">
+    <None Include="shpointtest.frag">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

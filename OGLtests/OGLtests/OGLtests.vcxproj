@@ -159,24 +159,17 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="Source1.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BasicFragmentShader.frs" />
-    <None Include="BasicVertexShader.vs" />
-    <None Include="fragmentshader.frs" />
-    <None Include="instancedFragmentShader.frs" />
-    <None Include="instancedVertexShader.vs" />
-    <None Include="normalViualizeGS.gs" />
-    <None Include="geometryShader.gs" />
-    <None Include="normalVisualizeVS.vs" />
-    <None Include="normalVisualizeFS.frs" />
-    <None Include="PostprocessFragmentShader.frs" />
-    <None Include="screenFragmentShader.frs" />
-    <None Include="screenVertexShader.vs" />
-    <None Include="shader.vs" />
-    <None Include="skyboxFragmentShader.frs" />
-    <None Include="skyBoxVertexShader.vs" />
+    <None Include="pointshadow_depth.frag" />
+    <None Include="pointshadow_depth.gs" />
+    <None Include="pointshadow_depth.vs" />
+    <None Include="shadow_mapping.frag" />
+    <None Include="shadow_mapping.vs" />
+    <None Include="shadow_mapping_depth.frag" />
+    <None Include="shadow_mapping_depth.vs" />
+    <None Include="shdpointtest.vs" />
+    <None Include="shpointtest.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
