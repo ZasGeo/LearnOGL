@@ -161,6 +161,8 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="flamingAss.frag" />
+    <None Include="flamingAss.vs" />
     <None Include="pointshadow_depth.frag" />
     <None Include="pointshadow_depth.gs" />
     <None Include="pointshadow_depth.vs" />

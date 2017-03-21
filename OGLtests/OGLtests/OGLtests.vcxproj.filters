@@ -73,5 +73,11 @@
     <None Include="shpointtest.frag">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="flamingAss.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="flamingAss.frag">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

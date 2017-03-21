@@ -1,0 +1,93 @@
+# Max2Mtl Version 4.0 Mar 10th, 2001
+#
+newmtl Facos
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  0.0
+illum 2
+map_Kd body-cos.jpg
+#
+# Multi/Sub Material__349 (3) to come 
+#
+newmtl Facos
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  0.0
+illum 2
+map_Kd body-cos.jpg
+#
+newmtl Falace
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  0.0
+illum 2
+map_Kd lace.jpg
+#
+newmtl Falace-ura
+Ka  0.7 0.7 0.7
+Kd  0.7 0.7 0.7
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  0.0
+illum 2
+map_Kd lace.jpg
+#
+# Multi/Sub Material__349 done 
+#
+newmtl Fahair
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  0.0
+illum 2
+map_Kd trans.jpg
+map_d trans_mask.jpg
+#
+# Multi/Sub Material__350 (2) to come 
+#
+newmtl Falace
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  0.0
+illum 2
+map_Kd lace.jpg
+#
+newmtl Falace-ura
+Ka  0.7 0.7 0.7
+Kd  0.7 0.7 0.7
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  0.0
+illum 2
+map_Kd lace.jpg
+#
+# Multi/Sub Material__350 done 
+#
+newmtl Famimi
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  0.6
+Ns  0.0
+illum 2
+map_Kd mimi.jpg
+#
+newmtl Falace
+Ka  1.0 1.0 1.0
+Kd  1.0 1.0 1.0
+Ks  1.0 1.0 1.0
+d  1.0
+Ns  0.0
+illum 2
+map_Kd lace.jpg
+#
+# EOF

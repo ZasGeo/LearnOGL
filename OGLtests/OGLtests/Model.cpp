@@ -3,7 +3,7 @@
 void Model::loadModel(std::string path) {
 
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs|aiProcess_CalcTangentSpace|aiProcess_GenNormals);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -69,6 +69,11 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene) {
 		}
 		else
 			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+
+		vector.x = mesh->mTangents[i].x;
+		vector.y = mesh->mTangents[i].y;
+		vector.z = mesh->mTangents[i].z;
+
 		vertices.push_back(vertex);
 	}
 	// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
@@ -98,8 +103,8 @@ Mesh Model::processMesh(aiMesh * mesh, const aiScene * scene) {
 		std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 		// 3. Reflection
-		std::vector<Texture> reflectionMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_reflection");
-		textures.insert(textures.end(), reflectionMaps.begin(), reflectionMaps.end());
+		std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 	}
 
 	// Return a mesh object created from the extracted mesh data
@@ -146,8 +151,8 @@ GLint TextureFromFile(const char* path, std::string directory)
 	filename = directory + '/' + filename;
 	GLuint textureID;
 	glGenTextures(1, &textureID);
-	int width, height;
-	unsigned char* image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+	int width, height, costylbliat;
+	unsigned char* image = SOIL_load_image(filename.c_str(), &width, &height, &costylbliat, SOIL_LOAD_RGB);
 	// Assign texture to ID
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
