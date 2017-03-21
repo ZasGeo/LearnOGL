@@ -46,37 +46,25 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shadow_mapping.vs">
+    <None Include="bloom.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="shadow_mapping.frag">
+    <None Include="bloom.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="shadow_mapping_depth.vs">
+    <None Include="light_box.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="shadow_mapping_depth.frag">
+    <None Include="blur.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointshadow_depth.vs">
+    <None Include="blur.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointshadow_depth.frag">
+    <None Include="bloom_final.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointshadow_depth.gs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="shdpointtest.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="shpointtest.frag">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="flamingAss.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="flamingAss.frag">
+    <None Include="bloom_final.frag">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
