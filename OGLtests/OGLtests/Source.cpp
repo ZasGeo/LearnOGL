@@ -83,17 +83,17 @@ int main()
 	Shader flamingAss("flamingAss.vs", "flamingAss.frag");
 	Shader shader("shdpointtest.vs", "shpointtest.frag");
 
-	
-	Model Nano("Models/SuitModel/nanosuit/nanosuit.obj");
-	
-	GLuint diffuseMap = loadTexture("brickwall.jpg");
-	GLuint normalMap = loadTexture("brickwall_normal.jpg");
 
-	// Set texture units 
+	GLuint diffuseMap = loadTexture("bricks2.jpg");
+	GLuint normalMap = loadTexture("bricks2_normal.jpg");
+	GLuint heightMap = loadTexture("bricks2_disp.jpg");
+	
+
+
 	shader.Use();
 	glUniform1i(glGetUniformLocation(shader.progId, "texture_diffuse1"), 0);
 	glUniform1i(glGetUniformLocation(shader.progId, "texture_normal1"), 1);
-
+	glUniform1i(glGetUniformLocation(shader.progId, "texture_depth1"), 2);
 
 	glm::vec3 lightPos(0.5f, 1.0f, 0.3f);
 	
@@ -112,45 +112,47 @@ int main()
 		glClearColor(0.2f, 0.6f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shader.Use();
+		//shader.Use();
 
-		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 proj = glm::perspective(glm::radians(45.0f), (GLfloat)SCR_WIDTH / (GLfloat)SCR_HEIGHT, 0.1f, 100.f);
-		glm::mat4 model;
-		model = glm::scale(model,glm::vec3(0.15, 0.15, 0.15));
-		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model") , 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(proj));
-		glUniform3f(glGetUniformLocation(shader.progId, "lightPos"), 0.5f, 1.0f, 0.3f);
-		glUniform3f(glGetUniformLocation(shader.progId, "viewPos"),  camera.Position.x, camera.Position.x, camera.Position.x);
+		//glm::mat4 view = camera.GetViewMatrix();
+		//glm::mat4 proj = glm::perspective(glm::radians(45.0f), (GLfloat)SCR_WIDTH / (GLfloat)SCR_HEIGHT, 0.1f, 100.f);
+		//glm::mat4 model;
+		////model = glm::scale(model,glm::vec3(0.15, 0.15, 0.15));
+		//glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model") , 1, GL_FALSE, glm::value_ptr(model));
+		//glUniformMatrix4fv(glGetUniformLocation(shader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		//glUniformMatrix4fv(glGetUniformLocation(shader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(proj));
+		//glUniform3fv(glGetUniformLocation(shader.progId, "lightPos"),1,&lightPos[0]);
+		//glUniform3fv(glGetUniformLocation(shader.progId, "viewPos"),1,  &camera.Position[0]);
 		
 	
-		Nano.Draw(shader);
 		
-		// Configure view/projection matrices
-		//shader.Use();
-		//glm::mat4 view = camera.GetViewMatrix();
-		//glm::mat4 projection = glm::perspective(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		//glUniformMatrix4fv(glGetUniformLocation(shader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		//glUniformMatrix4fv(glGetUniformLocation(shader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		//// Render normal-mapped quad
-		//glm::mat4 model;
-		//model = glm::rotate(model, glm::radians((GLfloat)glfwGetTime() * -10), glm::normalize(glm::vec3(1.0, 0.0, 1.0))); // Rotates the quad to show normal mapping works in all directions
-		//glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//glUniform3fv(glGetUniformLocation(shader.progId, "lightPos"), 1, &lightPos[0]);
-		//glUniform3fv(glGetUniformLocation(shader.progId, "viewPos"), 1, &camera.Position[0]);
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, diffuseMap);
-		//glActiveTexture(GL_TEXTURE1);
-		//glBindTexture(GL_TEXTURE_2D, normalMap);
-		//RenderQuad();
+		
+		shader.Use();
+		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)SCR_WIDTH / (GLfloat)SCR_HEIGHT, 0.1f, 100.0f);
+		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		// Render normal-mapped quad
+		glm::mat4 model;
+		model = glm::rotate(model, glm::radians((GLfloat)glfwGetTime() * -10), glm::normalize(glm::vec3(1.0, 0.0, 1.0))); // Rotates the quad to show parallax mapping works in all directions
+		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(glGetUniformLocation(shader.progId, "lightPos"), 1, &lightPos[0]);
+		glUniform3fv(glGetUniformLocation(shader.progId, "viewPos"), 1, &camera.Position[0]);
+		glUniform1i(glGetUniformLocation(shader.progId, "parallax"), GL_TRUE);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, diffuseMap);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, normalMap);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, heightMap);
+		RenderQuad();
 
-		//// render light source (simply re-renders a smaller plane at the light's position for debugging/visualization)
-		//model = glm::mat4();
-		//model = glm::translate(model, lightPos);
-		//model = glm::scale(model, glm::vec3(0.1f));
-		//glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//RenderQuad();
+		// render light source (simply renders a smaller plane at the light's position for debugging/visualization)
+		model = glm::mat4();
+		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.1f));
+		glUniformMatrix4fv(glGetUniformLocation(shader.progId, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		RenderQuad();
 		
 
 		// Swap the buffers
@@ -161,6 +163,7 @@ int main()
 	return 0;
 }
 
+// RenderQuad() Renders a 1x1 quad in NDC
 // RenderQuad() Renders a 1x1 quad in NDC
 GLuint quadVAO = 0;
 GLuint quadVBO;
@@ -246,7 +249,8 @@ void RenderQuad()
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 14 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(GLfloat), (GLvoid*)(8 * sizeof(GLfloat)));
-		
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(GLfloat), (GLvoid*)(11 * sizeof(GLfloat)));
 	}
 	glBindVertexArray(quadVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
